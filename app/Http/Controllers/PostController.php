@@ -28,47 +28,82 @@ class PostController extends Controller
 //         dump($post);
 
         $myPosts = Post::all();
-        return view('posts', compact('myPosts'));
+        return view('post.index', compact('myPosts'));
     }
 
     public function create()
     {
-        $postsArr = [
-            [
-                'title'=>'From storm',
-                'post_content'=>'From storm content',
-                'image'=>'From storm img',
-                'likes'=>100,
-                'is_published'=>1
-            ],
-            [
-                'title'=>'sec From storm',
-                'post_content'=>'sec From storm content',
-                'image'=>'sec From storm img',
-                'likes'=>11,
-                'is_published'=>1
-            ]
-        ];
-        foreach ($postsArr as $item) {
-            Post::create($item);
-        }
-        Post::create([
-           'title'=>'solo',
-           'post_content'=>'solo content',
-           'image'=>'solo_image',
-           'likes'=>12,
-           'is_published'=>1
-        ]);
-        dd('loaded');
+        return view('post.create');
+//        $postsArr = [
+//            [
+//                'title'=>'From storm',
+//                'post_content'=>'From storm content',
+//                'image'=>'From storm img',
+//                'likes'=>100,
+//                'is_published'=>1
+//            ],
+//            [
+//                'title'=>'sec From storm',
+//                'post_content'=>'sec From storm content',
+//                'image'=>'sec From storm img',
+//                'likes'=>11,
+//                'is_published'=>1
+//            ]
+//        ];
+//        foreach ($postsArr as $item) {
+//            Post::create($item);
+//        }
+//        Post::create([
+//           'title'=>'solo',
+//           'post_content'=>'solo content',
+//           'image'=>'solo_image',
+//           'likes'=>12,
+//           'is_published'=>1
+//        ]);
+//        dd('loaded');
     }
 
-    public function update()
+    public function store()
     {
-        Post::find(6)->update([
-            'title' => 'updated',
-            'post_content' => 'updated'
+        $data = request()->validate([
+           'title' => 'string',
+           'post_content' => 'string',
+           'image' => 'string'
         ]);
-        dd('updated');
+        Post::create($data);
+        return redirect()->route('post.index');
+        dd($data);
+    }
+
+    public function show(Post $post)
+    {
+        return view('post.show', compact('post'));
+    }
+
+    public function edit(Post $post)
+    {
+        return view('post.edit', compact('post'));
+    }
+    public function update(Post $post)
+    {
+        $data = request()->validate([
+           'title' => 'string',
+           'post_content' => 'string',
+           'image' => 'string'
+        ]);
+        $post->update($data);
+        return redirect()->route('post.show', $post->id);
+//        Post::find(6)->update([
+//            'title' => 'updated',
+//            'post_content' => 'updated'
+//        ]);
+//        dd('updated');
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('post.index');
     }
 
     public function delete()
