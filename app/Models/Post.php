@@ -13,7 +13,7 @@ class Post extends Model
 
     protected $someProperty;
     protected $table = 'posts';
-    protected $fillable = ['title','post_content','image','likes','is_published']; //либо protected $guarded = []/false
+    protected $fillable = ['title','post_content','image','likes','is_published', 'category_id']; //либо protected $guarded = []/false
 
     public function category()
     {

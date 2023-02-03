@@ -39,7 +39,6 @@ class PostController extends Controller
 //        dd($tag->posts);
 
 
-
 //        $categories = Category::find(1); Смотреть в модель Category 1 ко многим
 //        dd($categories->posts);
 
@@ -49,7 +48,9 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('post.create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('post.create', compact('categories', 'tags'));
 //        $postsArr = [
 //            [
 //                'title'=>'From storm',
@@ -82,13 +83,20 @@ class PostController extends Controller
     public function store()
     {
         $data = request()->validate([
-           'title' => 'string',
-           'post_content' => 'string',
-           'image' => 'string'
+            'title' => 'required|string',
+            'post_content' => 'required|string',
+            'image' => 'required|string',
+            'category_id' => '',
+            'tags'=>''
         ]);
-        Post::create($data);
+        if ( isset($data['tags'])) {
+            $tags = $data['tags'];
+            unset($data['tags']);
+
+            $post = Post::create($data);
+            $post->tags()->attach($tags); //tags() - query(Запрос в базу данных). Атач для привязки, он принимает массив
+        }
         return redirect()->route('post.index');
-        dd($data);
     }
 
     public function show(Post $post)
@@ -98,16 +106,26 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('post.edit', compact('post'));
+        $tags = Tag::all();
+        $categories = Category::all();
+        return view('post.edit', compact('post', 'categories', 'tags'));
     }
+
     public function update(Post $post)
     {
         $data = request()->validate([
-           'title' => 'string',
-           'post_content' => 'string',
-           'image' => 'string'
+            'title' => 'required|string',
+            'post_content' => 'required|string',
+            'image' => 'required|string',
+            'category_id'=>'',
+            'tags'=>''
         ]);
+        $tags = $data['tags'];
+        unset($data['tags']);
+
         $post->update($data);
+        $post->tags()->sync($tags);
+
         return redirect()->route('post.show', $post->id);
 //        Post::find(6)->update([
 //            'title' => 'updated',
@@ -129,6 +147,7 @@ class PostController extends Controller
         dump('deleted');
 
     }
+
     public function revdelete()
     {
         //Восстановление deleted данных
@@ -143,11 +162,11 @@ class PostController extends Controller
                 'title' => 'first or create'
             ],
             [
-                'title'=>'first or create',
-                'post_content'=>'first or create content',
-                'image'=>'FoC_image',
-                'likes'=>12,
-                'is_published'=>1
+                'title' => 'first or create',
+                'post_content' => 'first or create content',
+                'image' => 'FoC_image',
+                'likes' => 12,
+                'is_published' => 1
             ]
         );
         dd($post->post_content);
@@ -160,11 +179,11 @@ class PostController extends Controller
                 'title' => 'not updated'
             ],
             [
-                'title'=>'not updated',
-                'post_content'=>'not updated content',
-                'image'=>'FoC_image',
-                'likes'=>12,
-                'is_published'=>1
+                'title' => 'not updated',
+                'post_content' => 'not updated content',
+                'image' => 'FoC_image',
+                'likes' => 12,
+                'is_published' => 1
             ]
         );
         dd($post->post_content);
