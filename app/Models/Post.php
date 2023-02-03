@@ -19,4 +19,9 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class,'category_id', 'id'); //Получить категорию у поста
     }
+
+    public function tags() //Получить все теги у поста
+    {
+        return $this->belongsToMany(Tag::class, 'post_tags', 'post_id', 'tag_id');
+    }
 }
