@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -29,6 +31,20 @@ class PostController extends Controller
 
         $myPosts = Post::all();
         return view('post.index', compact('myPosts'));
+
+//        $post=Post::find(1); Много ко многим, смотреть в модель Post
+//        dd($post->tags);
+
+//        $tag = Tag::find(2); Много ко многим, смотреть в модель Tag
+//        dd($tag->posts);
+
+
+
+//        $categories = Category::find(1); Смотреть в модель Category 1 ко многим
+//        dd($categories->posts);
+
+//        $post = Post::find(2); Смотреть в модель Post 1 ко многим
+//        dd($post->category);
     }
 
     public function create()
