@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,14 @@ Route::get('/posts/{post}', 'PostController@show')->name('post.show');
 Route::get('/posts/{post}/edit', 'PostController@edit')->name('post.edit');
 Route::patch('/posts/{post}', 'PostController@update')->name('post.update');
 Route::delete('/posts/{post}', 'PostController@destroy')->name('post.destroy');
+
+Route::get('/admin', 'AdminController@index')->name('admin.index');
+Route::get('/admin/create', 'AdminController@create')->name('admin.post.create');
+Route::post('/admin', 'AdminController@store')->name('admin.post.store');
+Route::get('/admin/{post}', 'AdminController@show')->name('admin.post.show');
+Route::get('/admin/{post}/edit', 'AdminController@edit')->name('admin.post.edit');
+Route::patch('/admin/{post}', 'AdminController@update')->name('admin.post.update');
+Route::delete('/admin/{post}', 'AdminController@destroy')->name('admin.post.destroy');
 
 Route::get('/posts/delete','PostController@delete');
 Route::get('/posts/restore','PostController@revdelete');
