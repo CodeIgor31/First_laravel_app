@@ -23,7 +23,7 @@ class Service
         unset($data['tags']);
 
         $post->update($data);
-        $post->tags()->sync($tags);
+        $post->tags()->sync($tags); //sync удаляет старые зависимости и ставит новые
     }
 
 }
