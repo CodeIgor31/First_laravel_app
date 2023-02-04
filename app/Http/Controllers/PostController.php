@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckDataRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -80,15 +81,9 @@ class PostController extends Controller
 //        dd('loaded');
     }
 
-    public function store()
+    public function store(CheckDataRequest $request)
     {
-        $data = request()->validate([
-            'title' => 'required|string',
-            'post_content' => 'required|string',
-            'image' => 'required|string',
-            'category_id' => '',
-            'tags'=>''
-        ]);
+        $data = $request->validated();
         if ( isset($data['tags'])) {
             $tags = $data['tags'];
             unset($data['tags']);
@@ -111,15 +106,9 @@ class PostController extends Controller
         return view('post.edit', compact('post', 'categories', 'tags'));
     }
 
-    public function update(Post $post)
+    public function update(CheckDataRequest $request, Post $post)
     {
-        $data = request()->validate([
-            'title' => 'required|string',
-            'post_content' => 'required|string',
-            'image' => 'required|string',
-            'category_id'=>'',
-            'tags'=>''
-        ]);
+        $data = $request->validated();
         $tags = $data['tags'];
         unset($data['tags']);
 
