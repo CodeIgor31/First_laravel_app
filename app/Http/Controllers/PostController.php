@@ -30,7 +30,7 @@ class PostController extends Controller
 //         $post = Post::where('is_published', 1)->first();
 //         dump($post);
 
-        $myPosts = Post::all();
+        $myPosts = Post::paginate(10);
         return view('post.index', compact('myPosts'));
 
 //        $post=Post::find(1); Много ко многим, смотреть в модель Post
