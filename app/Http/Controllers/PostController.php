@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\PostFilter;
 use App\Http\Requests\CheckDataRequest;
+use App\Http\Requests\FilterRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -10,7 +12,7 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(FilterRequest $request)
     {
 //        $post = Post::first();
 //        echo $post;
@@ -29,8 +31,11 @@ class PostController extends Controller
 
 //         $post = Post::where('is_published', 1)->first();
 //         dump($post);
+        $data = $request->validated();
+        $filter = app()->make(PostFilter::class, ['queryParams'=>array_filter($data)]);
+        $myPosts = Post::filter($filter)->paginate(10);
 
-        $myPosts = Post::paginate(10);
+//        $myPosts = Post::paginate(10); Пагинация
         return view('post.index', compact('myPosts'));
 
 //        $post=Post::find(1); Много ко многим, смотреть в модель Post
