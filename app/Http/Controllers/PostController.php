@@ -84,13 +84,9 @@ class PostController extends Controller
     public function store(CheckDataRequest $request)
     {
         $data = $request->validated();
-        if ( isset($data['tags'])) {
-            $tags = $data['tags'];
-            unset($data['tags']);
 
-            $post = Post::create($data);
-            $post->tags()->attach($tags); //tags() - query(Запрос в базу данных). Атач для привязки, он принимает массив
-        }
+        $this->service->store($data);
+
         return redirect()->route('post.index');
     }
 
@@ -109,11 +105,8 @@ class PostController extends Controller
     public function update(CheckDataRequest $request, Post $post)
     {
         $data = $request->validated();
-        $tags = $data['tags'];
-        unset($data['tags']);
 
-        $post->update($data);
-        $post->tags()->sync($tags);
+        $this->service->update($post, $data);
 
         return redirect()->route('post.show', $post->id);
 //        Post::find(6)->update([
