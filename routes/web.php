@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'PagesController@main')->name('pages.main');
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::get('/main', 'PagesController@main')->name('pages.main');
 Route::get('/about', 'PagesController@about')->name('pages.about');
 Route::get('/contacts', 'PagesController@contacts')->name('pages.contacts');
 
@@ -41,3 +55,4 @@ Route::get('/posts/restore','PostController@revdelete');
 Route::get('/posts/first_or_create','PostController@firstOrCreate');
 Route::get('/posts/update_or_create','PostController@updateOrCreate');
 
+require __DIR__.'/auth.php';
