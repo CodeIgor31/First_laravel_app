@@ -15,6 +15,7 @@ class AdminController extends Controller
 {
     public function index(FilterRequest $request)
     {
+        // $this->authorize('view', auth()->user()); Policy
         $data = $request->validated();
         $filter = app()->make(PostFilter::class, ['queryParams'=>array_filter($data)]);
         $myPosts = Post::filter($filter)->paginate(10);
