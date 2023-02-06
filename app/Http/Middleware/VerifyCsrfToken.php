@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        '/posts' //Для использования в постман(Для добавления данных)
+        '/posts',
+        '/posts/*'
     ];
 }

@@ -27,6 +27,8 @@ class FilterRequest extends FormRequest
             'title' => 'string',
             'post_content' => 'string',
             'category_id' => '',
+            'page' => '',             //Для фильтра с Resource
+            'per_page' => ''
         ];
     }
 }

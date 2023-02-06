@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Filters\PostFilter;
 use App\Http\Requests\CheckDataRequest;
 use App\Http\Requests\FilterRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -14,29 +15,19 @@ class PostController extends Controller
 {
     public function index(FilterRequest $request)
     {
-//        $post = Post::first();
-//        echo $post;
-//        dd($post);
-//        dump($post);
-
-//        $posts = Post::all();
-//        foreach ($posts as $post) {
-//            dump($post->title);
-//        }
-
-//         $posts = Post::where('is_published', 1)->get();
-//         foreach ($posts as $post) {
-//             dump($post->title);
-//         }
-
-//         $post = Post::where('is_published', 1)->first();
-//         dump($post);
         $data = $request->validated();
         $filter = app()->make(PostFilter::class, ['queryParams'=>array_filter($data)]);
-        $myPosts = Post::filter($filter)->paginate(10);
+        //$myPosts = Post::filter($filter)->paginate(10);
 
 //        $myPosts = Post::paginate(10); Пагинация
-        return view('post.index', compact('myPosts'));
+
+        $page = $data['page'] ?? 1;
+        $perPage = $data['per_page'] ?? 10;
+
+        $myPosts = Post::filter($filter)->paginate($perPage, ['*'], 'page', $page); //Фильтр для фронта(См. Resource урок)
+
+        return PostResource::collection($myPosts); //Для Rsource
+       // return view('post.index', compact('myPosts'));
 
 //        $post=Post::find(1); Много ко многим, смотреть в модель Post
 //        dd($post->tags);
@@ -90,9 +81,10 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->store($data);
+        $post = $this->service->store($data);
 
-        return redirect()->route('post.index');
+        return new PostResource($post);
+        //return redirect()->route('post.index');
     }
 
     public function show(Post $post)
@@ -111,9 +103,11 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        $this->service->update($post, $data);
+        $post = $this->service->update($post, $data);
 
-        return redirect()->route('post.show', $post->id);
+        return new PostResource($post); //Resource + Postman
+
+        //return redirect()->route('post.show', $post->id);
 //        Post::find(6)->update([
 //            'title' => 'updated',
 //            'post_content' => 'updated'

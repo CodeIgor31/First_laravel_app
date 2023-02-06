@@ -14,6 +14,8 @@ class Service
 
             $post = Post::create($data);
             $post->tags()->attach($tags); //tags() - query(Запрос в базу данных). Атач для привязки, он принимает массив
+
+            return $post; //Для Resource
         }
     }
 
@@ -24,6 +26,8 @@ class Service
 
         $post->update($data);
         $post->tags()->sync($tags); //sync удаляет старые зависимости и ставит новые
+
+        return $post; //Для Resource + Postman
     }
 
 }
