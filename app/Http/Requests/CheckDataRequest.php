@@ -26,6 +26,7 @@ class CheckDataRequest extends FormRequest
         return [
             'title' => 'required|string',
             'post_content' => 'required|string',
+            'likes' => '',
             'image' => 'required|string',
             'category_id' => '',
             'tags'=>''
